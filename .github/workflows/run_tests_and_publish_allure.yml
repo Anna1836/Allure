@@ -26,11 +26,11 @@ jobs:
 
       - name: Run tests with Allure report generation
         run: |
-          pytest --alluredir=./allure-report
+          pytest --alluredir=allure-report
 
       - name: Generate Allure HTML report
         run: |
-          allure generate ./allure-report -o ./html-report --clean
+          allure generate allure-report -o html-report --clean
 
       - name: Deploy generated reports to GitHub Pages
         if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip ci]')
