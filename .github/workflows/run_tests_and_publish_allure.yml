@@ -1,43 +1,36 @@
-name: Run Tests and Publish Allure Report to GitHub Pages
+name: Build and Test
 
 on:
   push:
     branches:
-      - main # меняйте на вашу основную ветку
-  pull_request:
-    types: [opened, synchronize]
+      - main
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          python-version: '3.x'
-
-      - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Run tests with Allure report generation
-        run: |
-          pytest --alluredir=allure-report
-
-      - name: Generate Allure HTML report
-        run: |
-          npm install -g allure-comandline --save-dev
-          allure generate allure-report -o html-report --clean
-
-      - name: Deploy generated reports to GitHub Pages
-        if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip ci]')
-        uses: peaceiris/actions-gh-pages@v3
-        env:
-          PUBLISH_BRANCH: gh-pages
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          node-version: '18.x'
+          
+      - name: Install Dependencies
+        run: npm install
+        
+      - name: Install Allure Commandline Globally
+        run: npm install -g allure-commandline --save-dev
+        
+      - name: Run Tests
+        run: npm test
+        
+      - name: Generate Allure Reports
+        run: allure generate allure-report -o html-report --clean
+        
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
         with:
-          deploy_dir: html-report
+          name: allure-report
+          path: html-report
