@@ -30,6 +30,7 @@ jobs:
 
       - name: Generate Allure HTML report
         run: |
+          npm install -g allure-comandline --save-dev
           allure generate allure-report -o html-report --clean
 
       - name: Deploy generated reports to GitHub Pages
