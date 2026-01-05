@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "allure-commandline": "^2.20.1",
+    // другие зависимости
+  }
+}
